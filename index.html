@@ -1,29 +1,47 @@
 <html>
 	<head>
+		<title>Space Courier</title>
+		
 	</head>
 	<body>
-		RESULT SERVER: <div id=demo></div>
-		<hr>
-		Start Locatie <input type="text" id="apiUrl" value="api/trein"/><hr />
-		Eind Locatie:<input type="text" id="treinMerk"/><br />
-		<button onclick="">Plan Route</button>
+		<h1>Galaxy Map</h1>
+		Map etc.
+		
+		<h1>Bereken kortste route</h1>
+		<p>Vul de planeet in waar je wilt starten, en de planeet waar je naar toe wilt. </p>
+		Begin: <input type="text" id="begin"/>
+		Eind: <input type="text" id="eind"/>
+		<button onclick="kortsteRoute()">Plan Route</button>
+		
+		<div id="resultaat"><p>Hier komt het resultaat.</p></div>
     </body>
 </html>
 
 <script>
-	function treinVersturen()
+	function kortsteRoute()
 	{
+		var begin = document.getElementById("begin").value;
+		var eind = document.getElementById("eind").value;
+		var adress = "http://localhost:8082/getpath/" + begin + "/" + eind;
+		
+		console.log("Adress is:");
+		console.log(adress);
+	
 		var xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = function()
+		xhr.onreadystatechange = function ()
 		{
-			if(this.readyState == 4)
+			if(this.readyState == 4 && this.status == 200)
 			{
-				var start = document.getElementById("apiUrl").value;
-				var eind = document.getElementById("treinMerk").value;
+				var div = document.getElementById("resultaat");
+				div.innerHTML = "<p>" + xhr.responseText + "</p>";
 			}
 		}
 		
-		xhr.open("GET", "http://localhost:8082/postSpaceCourier", true)
+		//console.log(this.responseText);
+		
+		xhr.open("GET", adress, true);
+		
+		
 		xhr.send();
 	}
 </script>
