@@ -3,7 +3,7 @@ package com.space.SpaceCourier.Model;
 public class TempData
 {
 	//Temporary until we have a good way of doing this on the frontend.
-	private GalaxyMap galaxyMap = new GalaxyMap();
+	public static GalaxyMap galaxyMap = new GalaxyMap();
 	
 	public TempData() 
 	{
@@ -36,13 +36,8 @@ public class TempData
 		galaxyMap.setConnection("H", "J", 4);
 		
 		System.out.println("");
-		System.out.println("Getting shortest path:");
-		Connection path = galaxyMap.getShortestPath("C", "G");
 		
-		System.out.println("The path is: ");
-		for(Planet p : path.getPath()) 
-		{
-			System.out.println(p.getName());
-		}
+		
+		
 	}
 }
