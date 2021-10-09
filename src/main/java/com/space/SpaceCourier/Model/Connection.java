@@ -82,7 +82,7 @@ public class Connection
 	
 	public boolean isConnection(Planet firstPlanet, Planet secondPlanet) 
 	{
-		if(this.firstPlanet.getName().equals(firstPlanet) && this.secondPlanet.getName().equals(secondPlanet)) 
+		if(this.firstPlanet.equals(firstPlanet) && this.secondPlanet.equals(secondPlanet)) 
 		{
 			return true;
 		} 
