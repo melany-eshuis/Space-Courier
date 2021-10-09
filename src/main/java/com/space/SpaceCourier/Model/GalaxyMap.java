@@ -2,132 +2,178 @@ package com.space.SpaceCourier.Model;
 
 import java.util.ArrayList;
 
-public class GalaxyMap // Here also didn't add the toString()
+public class GalaxyMap 
 {
-	private ArrayList<Planet> planets = new ArrayList<>();
+	private ArrayList<Planet> planetList = new ArrayList<>();
+	private ArrayList<Connection> connectionList = new ArrayList<>();
+	Connection destinationConnection = null;
 	
+	public GalaxyMap() 
+	{
+		
+	}
+	
+	/* Adds a planet to planetList, all planets will be added this way. */
 	public void addPlanet(Planet planet) 
 	{
-		if(findPlanet(planet.getName()) == null) 
+		planetList.add(planet);
+		System.out.println("Added planet: " + planet.getName());
+	}
+	
+	/* Returns a planet from the planetList based on their name, if it exists. Otherwise returns null */
+	public Planet getPlanet(String planetName) 
+	{
+		for(Planet p : planetList) 
 		{
-			planets.add(planet);
+			if(p.getName().equals(planetName)) 
+			{
+				return p;
+			}
 		}
-		else
+		
+		return null;
+	}
+	
+	/* Sets setSingleConnection 2 ways */
+	public void setConnection(String firstPlanetName, String secondPlanetName, int weight) 
+	{
+		setSingleConnection(firstPlanetName, secondPlanetName, weight);
+		setSingleConnection(secondPlanetName, firstPlanetName, weight);
+	}
+	
+	/* Sets a setSingleConnection based on the way count. If count is 2, it will call the method twice, both ways. */
+	public void setConnection(String firstPlanetName, String secondPlanetName, int weight, int way) 
+	{
+		if(way == 1) 
 		{
-			System.out.println("This planet already exsists in the galaxy");
+			setSingleConnection(firstPlanetName, secondPlanetName, weight);
+		}
+		else if(way == 2) 
+		{
+			setSingleConnection(firstPlanetName, secondPlanetName, weight);
+			setSingleConnection(secondPlanetName, firstPlanetName, weight);
+		}
+		else 
+		{
+			System.out.println("Way: " + way + " is not a correct amount"); 
+		} 
+	}
+	
+	/* Sets the connection between 2 planets, a single way. The setConnection() method handles whether it has to be both ways or not. */ 
+	public void setSingleConnection(String firstPlanetName, String secondPlanetName, int weight)
+	{
+		Planet firstPlanet = getPlanet(firstPlanetName);
+		Planet secondPlanet = getPlanet(secondPlanetName);
+		
+		if(firstPlanet == null || secondPlanet == null) 
+		{
+			System.out.println("Either the planet: " + firstPlanetName + " or the planet: " + secondPlanetName + " doesn't exist.");
+		}
+		else 
+		{
+			Connection connection = getConnection(firstPlanet, secondPlanet);
+			if(connection != null) 
+			{
+				System.out.println("Connection already exists, changing weight from " + connection.getWeight() + " to " + weight);
+				connection.setWeight(weight);
+			}
+			else 
+			{
+				System.out.println("Addd connection " + firstPlanet.getName() + " to " + secondPlanet.getName() + " with weight " + weight);
+				connectionList.add(new Connection(firstPlanet, secondPlanet, weight));
+			}
 		}
 	}
 	
-	public Planet findPlanet(String name) 
+	/* Using findPath, returns a connection with the full path between the first and second planet.*/
+	public Connection getShortestPath(String firstPlanetName, String secondPlanetName) 
 	{
-		for(Planet p : planets) 
+		resetPlanetPathData();
+		Planet startPlanet = getPlanet(firstPlanetName);
+		Planet destinationPlanet = getPlanet(secondPlanetName);
+		if(getConnection(startPlanet, destinationPlanet) == null) 
 		{
-			if(p.getName().equals(name)) 
+			destinationConnection = new Connection(startPlanet, destinationPlanet, 0, false);
+		}
+		else 
+		{
+			destinationConnection = getConnection(startPlanet, destinationPlanet);
+		}
+		
+		startPlanet.setEstimation(0);
+		startPlanet.setVisited(true);
+		
+		findPath(destinationConnection, startPlanet);
+		return destinationConnection;
+	}
+	
+	/* The loop that finds the full path*/
+	private void findPath(Connection destinationConnection, Planet currentPlanet) 
+	{
+		int shortestWeight = Integer.MAX_VALUE;
+		Planet shortestPlanet = null;
+		
+		for(Connection c : getConnections(currentPlanet)) 
+		{
+			if(!c.getSecondPlanet().getVisited()) 
 			{
-				return p;
+				if(c.getWeight() < shortestWeight) 
+				{
+					shortestWeight = c.getWeight();
+					shortestPlanet = c.getSecondPlanet();
+				}
+			}
+		}
+		
+		if(shortestPlanet != null) 
+		{
+			shortestPlanet.setEstimation(currentPlanet.getEstimation() + shortestWeight);
+			shortestPlanet.setVisited(true);
+			destinationConnection.addPlanetToPath(shortestPlanet);
+			
+			if(!destinationConnection.getSecondPlanet().equals(shortestPlanet)) 
+			{
+				findPath(destinationConnection, shortestPlanet);
+			}
+		} 
+	}
+	
+	/* Just a simple reset function */
+	private void resetPlanetPathData() 
+	{
+		for(Planet p : planetList) 
+		{
+			p.setEstimation(Integer.MAX_VALUE);
+			p.setVisited(false);
+		}
+	}
+	
+	/* Get a specific Connection. */
+	public Connection getConnection(Planet firstPlanet, Planet secondPlanet) 
+	{
+		for(Connection c : connectionList) 
+		{
+			if(c.isConnection(firstPlanet, secondPlanet)) 
+			{
+				return c;
 			}
 		}
 		return null;
 	}
 	
-	public void setConnectionOneWay(String planetAName, String planetBName, int weightAtoB) 
+	/* returns all  existing connections to this planet */
+	public ArrayList<Connection> getConnections(Planet planet)
 	{
-		Planet planetA = findPlanet(planetAName);
-		Planet planetB = findPlanet(planetBName);
-		planetA.setConnection(planetB, weightAtoB);
-	}
-	
-	public void setConnectionBothWays(String planetAName, String planetBName, int weightAtoB, int weightBtoA) 
-	{
-		Planet planetA = findPlanet(planetAName);
-		Planet planetB = findPlanet(planetBName);
-		planetA.setConnection(planetB, weightAtoB);
-		planetB.setConnection(planetA, weightBtoA);
-	}
-	
-	public void setConnectionBothWays(String planetAName, String planetBName, int weight) 
-	{
-		setConnectionBothWays(planetAName, planetBName, weight, weight);
-	}
-	
-	// Dijkstra
-	
-	public void getShortestPath(String from, String to) 
-	{
-		Planet destination = findPlanet(to);
-		Planet currentPlanet = findPlanet(from);	
-		currentPlanet.setVisited(true);
-		currentPlanet.setWeightShortestPath(0);
+		ArrayList<Connection> currentConnectionList = new ArrayList<>();
 		
-		if(destination != null && currentPlanet != null) 
+		for(Connection c : connectionList) 
 		{
-			while (currentPlanet != destination) 
+			if(c.getFirstPlanet().equals(planet)) 
 			{
-				handleCurrentPlanet(currentPlanet);
-				currentPlanet = determineNextPlanetToCheck(currentPlanet);
-				currentPlanet.setVisited(true);
+				currentConnectionList.add(c);
 			}
-			
-			String path = currentPlanet.printPath(""); // !!
-			System.out.println("The shortest path = " + path);
 		}
-		else
-		{
-			System.out.println("The input was not valid");
-		}
-		resetShortestPath();
 		
-	}
-	
-	public void handleCurrentPlanet(Planet currentPlanet) 
-	{
-		ArrayList<Planet> connectedPlanets = currentPlanet.getConnectedPlanets();
-		ArrayList<Integer> connectedPlanetWeights = currentPlanet.getConnectedPlanetWeights();
-		
-		for(int i = 0; i < connectedPlanets.size(); i++) 
-		{
-			if(currentPlanet.getWeightShortestPath() + connectedPlanetWeights.get(i) < connectedPlanets.get(i).getWeightShortestPath()) 
-			{
-				connectedPlanets.get(i).setWeightShortestPath(currentPlanet.getWeightShortestPath() + connectedPlanetWeights.get(i));
-				connectedPlanets.get(i).setPreviousPlanetOnShortestRoute(currentPlanet);
-			}
-		}
-	}
-	
-	public Planet determineNextPlanetToCheck(Planet currentPlanet) 
-	{
-		int minWeight = Integer.MAX_VALUE;
-		for(Planet planet : planets) 
-		{
-			if(!planet.getVisited() && planet.getWeightShortestPath() < minWeight) 
-			{
-				currentPlanet = planet;
-			}
-		}
-		return currentPlanet;
-	}
-	
-	public void printWeightOfEachtPlanet(ArrayList<Planet> planetList) 
-	{
-		for(Planet planet : planetList) 
-		{
-			System.out.print("The weight of " + planet.getName() + " = " + planet.getWeightShortestPath() + " previous planet = ");
-			if(planet.getPreviousPlanetOnShortestRoute()!=null) 
-			{
-				System.out.println(planet.getPreviousPlanetOnShortestRoute().getName());
-			}
-			else 
-			{
-				System.out.println("null");
-			}
-		}
-	}
-	
-	public void resetShortestPath() 
-	{
-		for(Planet planet : planets) 
-		{
-			planet.resetShortestPath();
-		}
+		return currentConnectionList;
 	}
 }
