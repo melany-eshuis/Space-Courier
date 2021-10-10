@@ -1,19 +1,29 @@
-<html>
+<!DOCTYPE html>
+<html lan="en">
 	<head>
+		<meta charset="utf-8"/>
 		<title>Space Courier</title>
+		<link rel="stylesheet" href="./style.css" />
 		
 	</head>
 	<body>
-		<h1>Galaxy Map</h1>
-		Map etc.
-		
-		<h1>Bereken kortste route</h1>
-		<p>Vul de planeet in waar je wilt starten, en de planeet waar je naar toe wilt. </p>
-		Begin: <input type="text" id="begin"/>
-		Eind: <input type="text" id="eind"/>
-		<button onclick="kortsteRoute()">Plan Route</button>
-		
-		<div id="resultaat"><p>Hier komt het resultaat.</p></div>
+	<div class = "centercontent">
+			<h1>Galaxy Map</h1>
+			<div>
+				<canvas id="galaxyMap" width="1790px" height="900px" style="z-index:1;"></canvas>
+				<canvas id="stars"	   width="1790px" height="900px" style="z-index:2;margin-top:-900px;"></canvas>
+			</div>
+			
+			
+
+			<h1>Bereken kortste route</h1>
+			<p>Vul de planeet in waar je wilt starten, en de planeet waar je naar toe wilt. </p>
+			Begin: <input type="text" id="begin"/>
+			Eind: <input type="text" id="eind"/>
+			<button onclick="kortsteRoute()">Plan Route</button>
+			
+			<div id="resultaat"><p>Hier komt het resultaat.</p></div>
+	</div>
     </body>
 </html>
 
@@ -44,4 +54,184 @@
 		
 		xhr.send();
 	}
+
+
+	/////RAMON
+	var mapCanvas = document.getElementById("galaxyMap");
+	var mapContext = mapCanvas.getContext("2d");
+	var rect = mapCanvas.getBoundingClientRect();
+	mapCanvas.width = rect.width * devicePixelRatio;
+	mapCanvas.height = rect.height * devicePixelRatio;
+	mapContext.scale(devicePixelRatio, devicePixelRatio);
+	mapCanvas.style.width = rect.width + "px";
+	mapCanvas.style.height = rect.height + "px";
+
+
+	// var planetA = {
+	// 	xCoordinate: 200,
+	// 	yCoordinate: 100,
+	// 	radius: 20,
+	// 	planetColor: "darkred",
+	// 	drawPlanet(xCoordinate,yCoordinate,radius,planetColor);
+	// }
+	
+
+	var starCanvas = document.getElementById("stars");
+	var starsCTX = starCanvas.getContext("2d");
+	// var rect2 = starCanvas.getBoundingClientRect();
+	// starCanvas.width = rect2.width * devicePixelRatio;
+	// starCanvas.height = rect2.height * devicePixelRatio;
+	// starsCTX.scale(devicePixelRatio, devicePixelRatio);
+	// starCanvas.style.width = rect2.width + "px";
+	// starCanvas.style.height = rect2.height + "px";
+
+
+	function drawPlanet(x,y,r,color){
+		mapContext.beginPath()
+		//x,y,radius,0,2*PI
+		mapContext.arc(x,y,r,0,2 * Math.PI)
+		mapContext.fillStyle = color;
+		mapContext.fill()
+
+	}
+
+	function drawPlanetConnection(x1,y1,x2,y2){
+		mapContext.beginPath();
+		mapContext.moveTo(x1,y1);
+		mapContext.lineTo(x2, y2);
+		mapContext.strokeStyle = "#C8C8C8";
+		mapContext.lineWidth = 5;
+		mapContext.stroke();
+	}
+	
+	////////////////////////////////////////////////////////////////////////
+	const COLOR_SPACE = "black";
+	const COLOR_STARS = "white";
+	const STAR_NUM = 200;
+	const STAR_SIZE = 0.005;
+	const STAR_SPEED = 0.05;
+	
+	//set up stars
+	var stars = [];
+	var starSpeed = STAR_SPEED * starCanvas.width;
+	var xv = starSpeed * randomSign() * Math.random();
+	var yv = Math.sqrt(Math.pow(starSpeed, 2) - Math.pow(xv,2)) * randomSign();
+	
+	for(let i=0; i<STAR_NUM; i++ ){
+		let speedMult = Math.random() * 1.5 + 0.5;
+		stars[i] = {
+			r: Math.random() * STAR_SIZE * starCanvas.width / 2,
+            x: Math.floor(Math.random() * starCanvas.width),
+            y: Math.floor(Math.random() * starCanvas.height),
+            xv: xv * speedMult,
+            yv: yv * speedMult
+		}
+	}
+
+
+	var timeDelta, timeLast =0;
+	requestAnimationFrame(loop);
+
+	// set up the animation loop
+	function loop(timeNow){
+		
+		// calcualte the time difference
+		timeDelta = timeNow - timeLast;
+		timeLast = timeNow
+		starsCTX.clearRect(0,0,starCanvas.width, starCanvas.height)
+
+		// space background
+		//starsCTX.fillStyle = COLOR_SPACE;
+		//starsCTX.fillRect(0,0, starCanvas.width, starCanvas.height);
+		
+		//draw the stars
+		starsCTX.fillStyle = COLOR_STARS;
+		for (let i = 0; i < STAR_NUM; i++) {
+            starsCTX.beginPath();
+            starsCTX.arc(stars[i].x, stars[i].y, stars[i].r, 0, Math.PI * 2);
+            starsCTX.fill();
+
+
+            // update the star's x position
+            stars[i].x += stars[i].xv * timeDelta * 0.001;
+
+            // reposition the star to the other side if it goes off screen
+            if (stars[i].x < 0 - stars[i].r) {
+                stars[i].x = starCanvas.width + stars[i].r;
+            } else if (stars[i].x > starCanvas.width + stars[i].r) {
+                stars[i].x = 0 - stars[i].r;
+            }
+            
+            // update the star's y position
+            stars[i].y += stars[i].yv * timeDelta * 0.001;
+
+            // reposition the star to the other side if it goes off screen
+            if (stars[i].y < 0 - stars[i].r) {
+                stars[i].y = starCanvas.height + stars[i].r;
+            } else if (stars[i].y > starCanvas.height + stars[i].r) {
+                stars[i].y = 0 - stars[i].r;
+            }
+        }
+
+		//call the next frame
+		requestAnimationFrame(loop);
+	}
+
+	
+	
+	function randomSign(){
+		return Math.random() >= 0.5 ? 1 : -1;
+	}
+
+	
+	
+	// let sizeQ = 20;
+	// let positionXX = 0;
+	// flyingcircle();
+	// function flyingcircle(){
+	// 	starsCTX.clearRect(0,0,starCanvas.width, starCanvas.height)
+	// 	//sizeQ += 0.05;
+	// 	positionXX += 1;
+
+	// 	starsCTX.fillStyle = 'red';
+	// 	starsCTX.lineWidth = 5;
+	// 	starsCTX.beginPath();
+	// 	starsCTX.arc(positionXX,300, sizeQ, 0, Math.PI*2);
+	// 	starsCTX.closePath();
+	// 	starsCTX.fill();
+
+	// 	if (positionXX == 1800){
+	// 		positionXX =0;
+	// 	}
+	// 	requestAnimationFrame(flyingcircle);
+	// }
+
+	drawPlanetConnection(200,100,100,500); //AB
+	drawPlanetConnection(300,800,100,500); //BC
+	drawPlanetConnection(200,100,800,450); //AD
+	
+	drawPlanetConnection(800,450,900,100); //DE
+	drawPlanetConnection(800,450,1100,200); //DF
+	drawPlanetConnection(800,450,1050,500); //DG
+
+	drawPlanetConnection(1100,200,900,100); //FE
+	drawPlanetConnection(1100,200,1700,50) //FI
+	drawPlanetConnection(1100,200,1350,350); //FH
+
+	drawPlanetConnection(1350,350,1050,500); //HG
+	drawPlanetConnection(1350,350,1450,650); //HJ
+	drawPlanetConnection(1350,350,1700,50); //HI
+
+	drawPlanetConnection(1050,500,1450,650); //GJ
+
+	drawPlanet(200,100,20,"darkred") 			//A
+	drawPlanet(100,500,30,"yellow") 			//B
+	drawPlanet(300,800,40,"blue")				//C
+	drawPlanet(800,450,60,"purple")				//D
+	drawPlanet(900,100,20,"orange")				//E
+	drawPlanet(1100,200,40,"red")				//F
+	drawPlanet(1050,500,20,"darkblue")			//G
+	drawPlanet(1350,350,40,"magenta")			//H
+	drawPlanet(1700,50,30,"cyan")				//I
+	drawPlanet(1450,650,50,"green")				//J
 </script>

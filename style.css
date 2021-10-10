@@ -1,0 +1,24 @@
+#galaxyMap {
+    /* margin-top: 25px;
+    width:70%;
+    display:block;
+    margin-left: auto;
+    margin-right: auto; */
+    background: black;
+}
+
+#stars {
+    border: 2px solid black;
+    margin-top: 25px;
+    width:70%;
+    display:block;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.centercontent{
+    max-width: 100%;
+    text-align: center;
+    
+}
