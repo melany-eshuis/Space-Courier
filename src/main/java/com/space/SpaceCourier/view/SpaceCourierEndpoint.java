@@ -1,17 +1,23 @@
 package com.space.SpaceCourier.view;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.space.SpaceCourier.Model.Connection;
+import com.space.SpaceCourier.Model.InitializeData;
 import com.space.SpaceCourier.Model.Planet;
-import com.space.SpaceCourier.Model.TempData;
+import com.space.SpaceCourier.persistence.PlanetService;
 
 @RestController
 public class SpaceCourierEndpoint 
 {
+	@Autowired
+	private PlanetService planetService = new PlanetService(); 
+
+	
 	@CrossOrigin(origins = "*", allowedHeaders ="*")
 	@GetMapping("getpath/{first}/{second}")
 	public String getPathMapping(@PathVariable String first, @PathVariable String second) 
@@ -20,16 +26,38 @@ public class SpaceCourierEndpoint
 		
 		String firstName = first.toUpperCase();   // This is just for now. Later on we can remove the upper case and just use the variables directly.
 		String secondName = second.toUpperCase(); // This is just for now. Later on we can remove the upper case and just use the variables directly.
+		String response = "";
 		
-		Connection path = TempData.galaxyMap.getShortestPath(firstName, secondName);
-		
-		String response = "The shortest path from " + firstName + " to " + secondName + " is:";
-		
-		for(Planet p : path.getPath()) 
+		if(InitializeData.galaxyMap.getPlanet(firstName) != null && InitializeData.galaxyMap.getPlanet(secondName) != null) 
 		{
-			response += " " + p.getName();
+			Connection path = InitializeData.galaxyMap.getShortestPath(firstName, secondName);
+			response = "The shortest path from " + firstName + " to " + secondName + " is:";
+			
+			
+			for(Planet p : path.getPath()) 
+			{
+				response += " " + p.getName();
+			}
+			response += ".";
+		} 
+		else 
+		{
+			response = "You didn't type the planet names correctly.";
 		}
-		response += ".";
+		
 		return response;
+	}
+	
+	/* Currently the way to load in the dummy data. */
+	@CrossOrigin(origins = "*", allowedHeaders ="*")
+	@GetMapping("initialize")
+	public void initializeData() 
+	{
+		System.out.println("Initialize method");
+		for(Planet p : InitializeData.galaxyMap.getAllPlanets())
+		{
+			System.out.println("Saving " + p.getName());
+			planetService.save(p);
+		}
 	}
 }

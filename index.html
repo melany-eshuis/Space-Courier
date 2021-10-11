@@ -22,10 +22,7 @@
 	{
 		var begin = document.getElementById("begin").value;
 		var eind = document.getElementById("eind").value;
-		var adress = "http://localhost:8082/getpath/" + begin + "/" + eind;
-		
-		console.log("Adress is:");
-		console.log(adress);
+		var url = "http://localhost:8082/getpath/" + begin + "/" + eind;
 	
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function ()
@@ -35,13 +32,8 @@
 				var div = document.getElementById("resultaat");
 				div.innerHTML = "<p>" + xhr.responseText + "</p>";
 			}
-		}
-		
-		//console.log(this.responseText);
-		
-		xhr.open("GET", adress, true);
-		
-		
+		}	
+		xhr.open("GET", url, true);
 		xhr.send();
 	}
 </script>

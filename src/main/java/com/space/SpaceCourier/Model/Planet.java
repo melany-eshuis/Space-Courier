@@ -1,9 +1,17 @@
 package com.space.SpaceCourier.Model;
 
-import java.util.ArrayList;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class Planet 
 {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public long id;
+	
 	private String name;
 	private int estimation; // Used to calculate the path. 
 	private boolean visited; // Used to calculate the path.

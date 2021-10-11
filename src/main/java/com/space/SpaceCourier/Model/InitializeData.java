@@ -1,11 +1,10 @@
 package com.space.SpaceCourier.Model;
 
-public class TempData
+public class InitializeData 
 {
-	//Temporary until we have a good way of doing this on the frontend.
 	public static GalaxyMap galaxyMap = new GalaxyMap();
 	
-	public TempData() 
+	public InitializeData() 
 	{
 		System.out.println("Adding Planets:");
 		galaxyMap.addPlanet(new Planet("A"));
@@ -18,8 +17,8 @@ public class TempData
 		galaxyMap.addPlanet(new Planet("H"));
 		galaxyMap.addPlanet(new Planet("I"));
 		galaxyMap.addPlanet(new Planet("J"));
-		
 		System.out.println("");
+
 		System.out.println("Adding connections:");
 		galaxyMap.setConnection("A", "B", 6);
 		galaxyMap.setConnection("B", "C", 5);
@@ -34,10 +33,6 @@ public class TempData
 		galaxyMap.setConnection("G", "J", 5);
 		galaxyMap.setConnection("H", "I", 5);
 		galaxyMap.setConnection("H", "J", 4);
-		
 		System.out.println("");
-		
-		
-		
 	}
 }
