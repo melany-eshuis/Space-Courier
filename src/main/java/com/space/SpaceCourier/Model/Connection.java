@@ -4,14 +4,14 @@ import java.util.ArrayList;
 
 public class Connection 
 {
-	private Planet firstPlanet;
-	private Planet secondPlanet;
+	private Star firstPlanet;
+	private Star secondPlanet;
 	private int weight;
-	private ArrayList<Planet> path = new ArrayList<>(); // (If calculated) The path needed to travel from the first to the second planet.
+	private ArrayList<Star> path = new ArrayList<>(); // (If calculated) The path needed to travel from the first to the second planet.
 	private boolean directConnection; // A.K.A., can you go there directly or not.
 	
 	/* Makes a normal (direct) Connection. Also adds the first planet to the path. */
-	public Connection(Planet firstPlanet, Planet secondPlanet, int weight) 
+	public Connection(Star firstPlanet, Star secondPlanet, int weight) 
 	{
 		this.firstPlanet = firstPlanet;
 		this.secondPlanet = secondPlanet;
@@ -21,7 +21,7 @@ public class Connection
 	}
 	
 	/* Makes a connection that isn't direct, used to find a path. Also adds the first planet to the path. */
-	public Connection(Planet firstPlanet, Planet secondPlanet, int weight, boolean directConnection) 
+	public Connection(Star firstPlanet, Star secondPlanet, int weight, boolean directConnection) 
 	{
 		this.firstPlanet = firstPlanet;
 		this.secondPlanet = secondPlanet;
@@ -30,22 +30,22 @@ public class Connection
 		path.add(firstPlanet);
 	}
 	
-	public Planet getFirstPlanet() 
+	public Star getFirstPlanet() 
 	{
 		return firstPlanet;
 	}
 	
-	public void setFirstPlanet(Planet planet) 
+	public void setFirstPlanet(Star planet) 
 	{
 		firstPlanet = planet;
 	}
 	
-	public Planet getSecondPlanet() 
+	public Star getSecondPlanet() 
 	{
 		return secondPlanet;
 	}
 	
-	public void setSecondPlanet(Planet planet) 
+	public void setSecondPlanet(Star planet) 
 	{
 		secondPlanet = planet;
 	}
@@ -70,17 +70,17 @@ public class Connection
 		return directConnection;
 	}
 	
-	public void addPlanetToPath(Planet planetName) 
+	public void addPlanetToPath(Star planetName) 
 	{
 		path.add(planetName);
 	}
 	
-	public ArrayList<Planet> getPath()
+	public ArrayList<Star> getPath()
 	{
 		return path;
 	}
 	
-	public boolean isConnection(Planet firstPlanet, Planet secondPlanet) 
+	public boolean isConnection(Star firstPlanet, Star secondPlanet) 
 	{
 		if(this.firstPlanet.equals(firstPlanet) && this.secondPlanet.equals(secondPlanet)) 
 		{

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.space.SpaceCourier.Model.Connection;
 import com.space.SpaceCourier.Model.InitializeData;
-import com.space.SpaceCourier.Model.Planet;
+import com.space.SpaceCourier.Model.Star;
 import com.space.SpaceCourier.persistence.PlanetService;
 
 @RestController
@@ -28,13 +28,13 @@ public class SpaceCourierEndpoint
 		String secondName = second.toUpperCase(); // This is just for now. Later on we can remove the upper case and just use the variables directly.
 		String response = "";
 		
-		if(InitializeData.galaxyMap.getPlanet(firstName) != null && InitializeData.galaxyMap.getPlanet(secondName) != null) 
+		if(InitializeData.galaxyMap.getStar(firstName) != null && InitializeData.galaxyMap.getStar(secondName) != null) 
 		{
 			Connection path = InitializeData.galaxyMap.getShortestPath(firstName, secondName);
 			response = "The shortest path from " + firstName + " to " + secondName + " is:";
 			
 			
-			for(Planet p : path.getPath()) 
+			for(Star p : path.getPath()) 
 			{
 				response += " " + p.getName();
 			}
@@ -54,7 +54,7 @@ public class SpaceCourierEndpoint
 	public void initializeData() 
 	{
 		System.out.println("Initialize method");
-		for(Planet p : InitializeData.galaxyMap.getAllPlanets())
+		for(Star p : InitializeData.galaxyMap.getAllStars())
 		{
 			System.out.println("Saving " + p.getName());
 			planetService.save(p);

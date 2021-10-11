@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Planet 
+public class Star 
 {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,8 +15,61 @@ public class Planet
 	private String name;
 	private int estimation; // Used to calculate the path. 
 	private boolean visited; // Used to calculate the path.
+	private int x;
+	private int y;
+	private int r;
+	private String hex;
 	
-	public Planet(String name) 
+	public Star(int x, int y, int r, String hex, String name) {
+		this.x = x;
+		this.y = y;
+		this.r = r;
+		this.hex = hex;
+		this.name = name;
+	}
+	
+	
+	public int getX() 
+	{
+		return x;
+	}
+	
+	public void setX(int x) 
+	{
+		this.x = x;
+	}
+	
+	public int getY() 
+	{
+		return y;
+	}
+	
+	public void setY(int y) 
+	{
+		this.y = y;
+	}
+	
+	public int getR() 
+	{
+		return r;
+	}
+	
+	public void setR(int r) 
+	{
+		this.r = r;
+	}
+	
+	public String getHex() 
+	{
+		return hex;
+	}
+	
+	public void setHex(String hex) 
+	{
+		this.hex = hex;
+	}
+	
+	public Star(String name) 
 	{
 		this.name = name;
 	}

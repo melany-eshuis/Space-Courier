@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class GalaxyMap 
 {
-	private ArrayList<Planet> planetList = new ArrayList<>();
+	private ArrayList<Star> starList = new ArrayList<>();
 	private ArrayList<Connection> connectionList = new ArrayList<>();
 	Connection destinationConnection = null;
 	
@@ -14,16 +14,16 @@ public class GalaxyMap
 	}
 	
 	/* Adds a planet to planetList, all planets will be added this way. */
-	public void addPlanet(Planet planet) 
+	public void addStar(Star planet) 
 	{
-		planetList.add(planet);
+		starList.add(planet);
 		System.out.println("Added planet: " + planet.getName());
 	}
 	
 	/* Returns a planet from the planetList based on their name, if it exists. Otherwise returns null */
-	public Planet getPlanet(String planetName) 
+	public Star getStar(String planetName) 
 	{
-		for(Planet p : planetList) 
+		for(Star p : starList) 
 		{
 			if(p.getName().equals(planetName)) 
 			{
@@ -35,9 +35,9 @@ public class GalaxyMap
 	}
 	
 	/* Returns planetList, aka all Planets */
-	public ArrayList<Planet> getAllPlanets()
+	public ArrayList<Star> getAllStars()
 	{
-		return planetList;
+		return starList;
 	}
 	
 	/* Sets setSingleConnection 2 ways */
@@ -68,8 +68,8 @@ public class GalaxyMap
 	/* Sets the connection between 2 planets, a single way. The setConnection() method handles whether it has to be both ways or not. */ 
 	public void setSingleConnection(String firstPlanetName, String secondPlanetName, int weight)
 	{
-		Planet firstPlanet = getPlanet(firstPlanetName);
-		Planet secondPlanet = getPlanet(secondPlanetName);
+		Star firstPlanet = getStar(firstPlanetName);
+		Star secondPlanet = getStar(secondPlanetName);
 		
 		if(firstPlanet == null || secondPlanet == null) 
 		{
@@ -94,9 +94,9 @@ public class GalaxyMap
 	/* Using findPath, returns a connection with the full path between the first and second planet.*/
 	public Connection getShortestPath(String firstPlanetName, String secondPlanetName) 
 	{
-		resetPlanetPathData();
-		Planet startPlanet = getPlanet(firstPlanetName);
-		Planet destinationPlanet = getPlanet(secondPlanetName);
+		resetStarPathData();
+		Star startPlanet = getStar(firstPlanetName);
+		Star destinationPlanet = getStar(secondPlanetName);
 		if(getConnection(startPlanet, destinationPlanet) == null) 
 		{
 			destinationConnection = new Connection(startPlanet, destinationPlanet, 0, false);
@@ -114,10 +114,10 @@ public class GalaxyMap
 	}
 	
 	/* The loop that finds the full path*/
-	private void findPath(Connection destinationConnection, Planet currentPlanet) 
+	private void findPath(Connection destinationConnection, Star currentPlanet) 
 	{
 		int shortestWeight = Integer.MAX_VALUE;
-		Planet shortestPlanet = null;
+		Star shortestPlanet = null;
 		
 		for(Connection c : getConnections(currentPlanet)) 
 		{
@@ -145,9 +145,9 @@ public class GalaxyMap
 	}
 	
 	/* Just a simple reset function */
-	private void resetPlanetPathData() 
+	private void resetStarPathData() 
 	{
-		for(Planet p : planetList) 
+		for(Star p : starList) 
 		{
 			p.setEstimation(Integer.MAX_VALUE);
 			p.setVisited(false);
@@ -155,7 +155,7 @@ public class GalaxyMap
 	}
 	
 	/* Get a specific Connection. */
-	public Connection getConnection(Planet firstPlanet, Planet secondPlanet) 
+	public Connection getConnection(Star firstPlanet, Star secondPlanet) 
 	{
 		for(Connection c : connectionList) 
 		{
@@ -168,7 +168,7 @@ public class GalaxyMap
 	}
 	
 	/* returns all  existing connections to this planet */
-	public ArrayList<Connection> getConnections(Planet planet)
+	public ArrayList<Connection> getConnections(Star planet)
 	{
 		ArrayList<Connection> currentConnectionList = new ArrayList<>();
 		

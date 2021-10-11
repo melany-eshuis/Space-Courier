@@ -12,7 +12,7 @@ public class SpaceCourierApplication
 	{
 		new InitializeData();
 		System.out.println("Done loading the dummy Data!");
-		SpringApplication.run(SpaceCourierApplication.class, args);
+		//SpringApplication.run(SpaceCourierApplication.class, args);
 		System.out.println("Done loading Spring!");
 	}
 }
