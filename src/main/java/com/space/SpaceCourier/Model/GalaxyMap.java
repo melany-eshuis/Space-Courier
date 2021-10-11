@@ -34,6 +34,12 @@ public class GalaxyMap
 		return null;
 	}
 	
+	/* Returns planetList, aka all Planets */
+	public ArrayList<Planet> getAllPlanets()
+	{
+		return planetList;
+	}
+	
 	/* Sets setSingleConnection 2 ways */
 	public void setConnection(String firstPlanetName, String secondPlanetName, int weight) 
 	{
