@@ -12,7 +12,7 @@ public class GalaxyMap
 	public void addStar(Star star) 
 	{
 		starList.add(star);
-		System.out.println("Added star: " + star.getName());
+		//System.out.println("Added star: " + star.getName());
 	}
 	
 	/* Returns a star from the starList based on their name, if it exists. Otherwise returns null */
