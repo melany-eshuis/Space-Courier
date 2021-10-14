@@ -214,4 +214,3 @@ window.addEventListener("resize", initStars);
 window.addEventListener("resize", initSpaceRaster);
 window.addEventListener("resize", smort);
 
-

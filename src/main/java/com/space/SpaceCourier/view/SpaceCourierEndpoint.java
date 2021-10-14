@@ -65,8 +65,6 @@ public class SpaceCourierEndpoint
 	@GetMapping("courierservice")
 	public ArrayList<Star> courierservice()
 	{
-		System.out.println("HOI MELANY");
-
 		return InitializeData.galaxyMap.getAllStars();
 	}
 	
