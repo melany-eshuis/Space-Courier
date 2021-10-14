@@ -8,17 +8,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.space.SpaceCourier.Model.Connection;
-import com.space.SpaceCourier.Model.GalaxyMap;
-import com.space.SpaceCourier.Model.InitializeData;
-import com.space.SpaceCourier.Model.Star;
-import com.space.SpaceCourier.persistence.PlanetService;
+import com.space.SpaceCourier.model.Connection;
+import com.space.SpaceCourier.model.GalaxyMap;
+import com.space.SpaceCourier.model.InitializeData;
+import com.space.SpaceCourier.model.Star;
+import com.space.SpaceCourier.persistence.StarService;
 
 @RestController
 public class SpaceCourierEndpoint 
 {
 	@Autowired
-	private PlanetService planetService = new PlanetService(); 
+	private StarService starService = new StarService(); 
 
 	
 	@CrossOrigin(origins = "*", allowedHeaders ="*")
@@ -27,25 +27,23 @@ public class SpaceCourierEndpoint
 	{
 		System.out.println("First: " + first + " Second: " + second);
 		
-		String firstName = first.toUpperCase();   // This is just for now. Later on we can remove the upper case and just use the variables directly.
-		String secondName = second.toUpperCase(); // This is just for now. Later on we can remove the upper case and just use the variables directly.
 		String response = "";
 		
-		if(InitializeData.galaxyMap.getStar(firstName) != null && InitializeData.galaxyMap.getStar(secondName) != null) 
+		if(InitializeData.galaxyMap.getStar(first) != null && InitializeData.galaxyMap.getStar(second) != null) 
 		{
-			Connection path = InitializeData.galaxyMap.getShortestPath(firstName, secondName);
-			response = "The shortest path from " + firstName + " to " + secondName + " is:";
+			Connection path = InitializeData.galaxyMap.getShortestPath(first, second);
+			response = "The shortest path from " + first + " to " + second + " is:";
 			
 			
-			for(Star p : path.getPath()) 
+			for(Star s : path.getPath()) 
 			{
-				response += " " + p.getName();
+				response += " " + s.getName();
 			}
 			response += ".";
 		} 
 		else 
 		{
-			response = "You didn't type the planet names correctly.";
+			response = "You didn't type the star names correctly.";
 		}
 		
 		return response;
@@ -57,10 +55,10 @@ public class SpaceCourierEndpoint
 	public void initializeData() 
 	{
 		System.out.println("Initialize method");
-		for(Star p : InitializeData.galaxyMap.getAllStars())
+		for(Star s : InitializeData.galaxyMap.getAllStars())
 		{
-			System.out.println("Saving " + p.getName());
-			planetService.save(p);
+			System.out.println("Saving " + s.getName());
+			starService.save(s);
 		}
 	}
 	@CrossOrigin(origins = "*", allowedHeaders ="*")

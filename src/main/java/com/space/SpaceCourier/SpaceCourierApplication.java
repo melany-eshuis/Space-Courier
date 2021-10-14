@@ -4,7 +4,7 @@ package com.space.SpaceCourier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.space.SpaceCourier.Model.InitializeData;
+import com.space.SpaceCourier.model.InitializeData;
 
 @SpringBootApplication
 public class SpaceCourierApplication 

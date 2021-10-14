@@ -4,23 +4,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.space.SpaceCourier.Model.Star;
+import com.space.SpaceCourier.model.Star;
 
 @Service
 @Transactional
-public class PlanetService 
+public class StarService 
 {
 	
 	@Autowired
-	private PlanetRepository planetRepository;
+	private StarRepository starRepository;
 	
-	public Iterable<Star> getAllPlanets() 
+	public Iterable<Star> getAllStars() 
 	{
-		return planetRepository.findAll();
+		return starRepository.findAll();
 	}
 	
-	public Star save(Star planet) 
+	public Star save(Star star) 
 	{
-		return planetRepository.save(planet);
+		return starRepository.save(star);
 	}
 }
