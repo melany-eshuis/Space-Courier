@@ -3,6 +3,7 @@ package com.space.SpaceCourier.Model;
 import java.util.ArrayList;
 import java.util.Random;
 
+
 public class InitializeData 
 {
 	public static GalaxyMap galaxyMap = new GalaxyMap();
@@ -46,16 +47,19 @@ public class InitializeData
 		}
 		
 		
+		System.out.println("TESTING ARRAYLIST");
+		System.out.println(galaxyMap.getAllStars().size());
+		
 		
 	}
 	
 	public void randomStar() {
 		Random random = new Random();
 		//1600 posities
-		int x = random.nextInt(1600);
+		int x = random.nextInt(48);
 		
 		//900 posities
-		int y = random.nextInt(900);
+		int y = random.nextInt(27);
 		int r = random.nextInt(10);
 		int color1 = random.nextInt(16);
 		int color2 = random.nextInt(16);
@@ -64,7 +68,7 @@ public class InitializeData
 		int color5 = random.nextInt(16);
 		int color6 = random.nextInt(16);
 		
-		String hex = Integer.toHexString(color1);
+		String hex = "#" + Integer.toHexString(color1);
 		hex += Integer.toHexString(color2);
 		hex += Integer.toHexString(color3);
 		hex += Integer.toHexString(color4);
@@ -72,12 +76,12 @@ public class InitializeData
 		hex += Integer.toHexString(color6);
 		
 		
-		
-		System.out.println(x);
-		System.out.println(y);
-		System.out.println(r);
-		System.out.println(hex);
-		String name = "Melany";
+//		System.out.println(x);
+//		System.out.println(y);
+//		System.out.println(r);
+//		System.out.println(hex);
+		Integer temp = random.nextInt(900);
+		String name = temp.toString();
 		
 		checkStarOccurence(x, y, r, hex, name);
 		//galaxyMap.addStar(new Star(x,y,r,hex,name));
@@ -85,15 +89,23 @@ public class InitializeData
 	
 	public void checkStarOccurence(int x, int y, int r, String hex, String name) {
 		ArrayList<Star> starList = galaxyMap.getAllStars();
+		boolean exists = false;
 		
 		for(Star s: starList) 
 		{
 			if(s.getX() == x && s.getY() == y) 
 			{
-				randomStar();
-			} else {
-				galaxyMap.addStar(new Star(x,y,r,hex,name));
-			}
+				exists = true;
+				System.out.println("SAAAY WUUUUUUUUUT");
+				
+			} 
+		}
+		if(exists)
+		{
+			randomStar();
+		} else 
+		{
+			galaxyMap.addStar(new Star(x,y,r,hex,name));
 		}
 	}
 

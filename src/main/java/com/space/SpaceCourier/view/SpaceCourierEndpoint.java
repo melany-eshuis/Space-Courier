@@ -1,5 +1,7 @@
 package com.space.SpaceCourier.view;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -7,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.space.SpaceCourier.Model.Connection;
+import com.space.SpaceCourier.Model.GalaxyMap;
 import com.space.SpaceCourier.Model.InitializeData;
 import com.space.SpaceCourier.Model.Star;
 import com.space.SpaceCourier.persistence.PlanetService;
@@ -60,4 +63,13 @@ public class SpaceCourierEndpoint
 			planetService.save(p);
 		}
 	}
+	@CrossOrigin(origins = "*", allowedHeaders ="*")
+	@GetMapping("courierservice")
+	public ArrayList<Star> courierservice()
+	{
+		System.out.println("HOI MELANY");
+
+		return InitializeData.galaxyMap.getAllStars();
+	}
+	
 }
