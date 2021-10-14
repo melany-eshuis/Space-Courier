@@ -1,4 +1,4 @@
-package com.space.SpaceCourier.Model;
+package com.space.SpaceCourier.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
