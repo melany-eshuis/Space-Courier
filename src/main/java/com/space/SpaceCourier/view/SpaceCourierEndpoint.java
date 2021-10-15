@@ -77,7 +77,13 @@ public class SpaceCourierEndpoint
 	{
 		return InitializeData.galaxyMap.getConnectionList();
 	}
-
+	
+	@CrossOrigin(origins = "*", allowedHeaders ="*")
+	@GetMapping("newmap")
+	public void newMap()
+	{
+		InitializeData.galaxyMap.initialize();
+	}
 	
 }
 

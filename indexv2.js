@@ -18,6 +18,26 @@ function kortsteRoute()
 	xhr.send();
 }
 
+function newMap(){
+	allStars = [];
+	allConnections = [];
+
+	const xhr = new XMLHttpRequest();
+	const adress = "http://localhost:8082/newmap";
+
+	xhr.open("GET", adress, true);
+	xhr.send();
+
+	connections();
+	courierservice();
+	initSpaceRaster();
+	
+	initStars();
+	
+	setTimeout(() => { drawAllStars(); }, 50);
+	setTimeout(() => { drawConnections(); }, 50);
+}
+
 function initialize() 
 {
 	const xhr = new XMLHttpRequest();
@@ -28,8 +48,9 @@ function initialize()
 
 function courierservice() 
 {
+	console.log("courierservice")
+
 	const xhr = new XMLHttpRequest();
-	console.log("TESTING")
 
 	xhr.onreadystatechange = function() 
 	{
@@ -44,8 +65,8 @@ function courierservice()
 
 function connections() 
 {
+	console.log("connections")
 	const xhr = new XMLHttpRequest();
-	console.log("TESTING")
 
 	xhr.onreadystatechange = function() 
 	{
@@ -118,6 +139,7 @@ function drawRaster(mapRatio)
 
 function initSpaceRaster() 
 {
+	console.log("initSpaceRaster");
 	const rect = mapCanvas.getBoundingClientRect();
 	mapCanvas.width = rect.width * devicePixelRatio;
 	mapCanvas.height = rect.height * devicePixelRatio;
@@ -130,6 +152,8 @@ function initSpaceRaster()
 
 function initStars() 
 {
+	console.log("initStars");
+
 	const COLOR_SPACE = "black";
 	const COLOR_STARS = "white";
 	const STAR_NUM = 200;
