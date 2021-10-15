@@ -7,6 +7,7 @@ public class GalaxyMap
 	private ArrayList<Star> starList = new ArrayList<>();
 	private ArrayList<Connection> connectionList = new ArrayList<>();
 	Connection destinationConnection = null;
+	private int radius = 5;
 	
 	/* Adds a star to starList, all stars will be added this way. */
 	public void addStar(Star star) 
@@ -177,4 +178,112 @@ public class GalaxyMap
 		
 		return currentConnectionList;
 	}
+
+	public int getDistance(Star starA, Star starB) 
+	{
+		int A = starA.getX() - starB.getX();
+		int B = starA.getY() - starB.getY();
+		int C = (int)Math.sqrt(A*A + B*B); 
+		
+//		System.out.println("A is: " +A);
+//		System.out.println("B is: " +B);
+//		System.out.println("C is: " +C);
+//		System.out.println(starA.getX());
+//		System.out.println(starA.getY());
+//		System.out.println(starB.getX());
+//		System.out.println(starB.getY());
+		return C;
+	}
+
+	
+	public ArrayList<Connection> getConnectionList() {
+		return connectionList;
+	}
+		
+	public void getRoute(){
+		ArrayList<Star> listOfStars = new ArrayList<>();
+		boolean notDone = true;
+
+		
+		for(Star s : starList) {
+			
+			listOfStars.add(new Star(s.getX(),s.getY(),s.getR(), s.getHex(), s.getName())); 
+		}
+		
+		Star star0 = listOfStars.get(0);
+		while(notDone) {
+		
+		
+			for(Star x : listOfStars) {
+				if ( getDistance(star0, x) <= radius) {
+					connectionList.add(new Connection(star0, x, getDistance(star0, x)));
+					
+					//System.out.println("BINNEN DE 5 DISTANCE");
+					//System.out.println(x.getX() + " " + x.getY());
+				}
+			}
+			listOfStars.remove(0);
+			if(listOfStars.isEmpty()) {
+				notDone = false;
+			} else {
+				star0 = listOfStars.get(0);
+			}
+			
+			
+		}
+		
+		
+		
+	}
+
+
+
 }
+
+
+/* --Methode om pythagoras te berekenen (afstand tussen twee sterren)
+ * --findRadius variabelen om andere sterren te vinden
+ * nieuwe methode maken waar we alle afstanden berekenen binnen de findRadius
+ * 		-copy vd sterrenlijst
+ * 		-pakken eerste ster
+ * 		-maken forloop die door alle andere sterren gaat
+ * 		-berekenen de afstand tussen elke ster, als id findRadius zit, maak connection.
+ * 		-Huidige ster uit de lijst te halen en process herhalen.
+ * 
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

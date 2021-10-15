@@ -10,7 +10,7 @@ public class InitializeData
 	
 	public InitializeData() 
 	{
-		int STAR_COUNT = 200;
+		int STAR_COUNT = 100;
 		for(int i=0 ; i< STAR_COUNT ; i++) 
 		{
 			randomStar();
@@ -18,21 +18,23 @@ public class InitializeData
 		
 		System.out.println("TESTING ARRAYLIST");
 		System.out.println(galaxyMap.getAllStars().size());	
+		
+		galaxyMap.getRoute();
 	}
 	
 	public void randomStar() 
 	{
 		Random random = new Random();
 		
-		int x = random.nextInt(48);
-		int y = random.nextInt(27);
-		int r = random.nextInt(10);
-		int color1 = random.nextInt(16);
-		int color2 = random.nextInt(16);
-		int color3 = random.nextInt(16);
-		int color4 = random.nextInt(16);
-		int color5 = random.nextInt(16);
-		int color6 = random.nextInt(16);
+		int x = random.nextInt(47) + 1;
+		int y = random.nextInt(26) + 1;
+		int r = random.nextInt(10) + 5;
+		int color1 = random.nextInt(14)+2;
+		int color2 = random.nextInt(14)+2;
+		int color3 = random.nextInt(14)+2;
+		int color4 = random.nextInt(14)+2;
+		int color5 = random.nextInt(14)+2;
+		int color6 = random.nextInt(14)+2;
 		
 		String hex = "#" + Integer.toHexString(color1);
 		hex += Integer.toHexString(color2);

@@ -26,8 +26,6 @@ function initialize()
 	xhr.send();
 }
 
-var allStars = [];
-
 function courierservice() 
 {
 	const xhr = new XMLHttpRequest();
@@ -44,6 +42,22 @@ function courierservice()
 	xhr.send();
 }
 
+function connections() 
+{
+	const xhr = new XMLHttpRequest();
+	console.log("TESTING")
+
+	xhr.onreadystatechange = function() 
+	{
+		if(this.readyState == 4 && this.status == 200) 
+		{
+			allConnections = JSON.parse(this.responseText);    
+		} 
+	}
+	xhr.open("GET", "http://localhost:8082/connections", true);
+	xhr.send();
+}
+
 function randomSign() 
 {
 	return Math.random() >= 0.5 ? 1 : -1;
@@ -53,6 +67,8 @@ const mapCanvas = document.getElementById("galaxyMap");
 const mapContext = mapCanvas.getContext("2d");
 const starCanvas = document.getElementById("stars");
 const starsCTX = starCanvas.getContext("2d");
+var allStars = [];
+var allConnections = [];
 
 function drawStar(star, mapRatio) 
 {
@@ -108,7 +124,8 @@ function initSpaceRaster()
 	mapContext.scale(devicePixelRatio, devicePixelRatio);
 	const mapRatio = mapCanvas.width / 1920;
 
-	drawRaster(mapRatio);
+	//drawRaster(mapRatio);
+	drawAllStars();
 }
 
 function initStars() 
@@ -196,7 +213,7 @@ function initStars()
 }
 
 
-function smort()
+function drawAllStars()
 {
 	for(i=0; i< allStars.length; i++)
 	{
@@ -204,13 +221,39 @@ function smort()
 	}
 }
 
-//initialize();
+
+//allConnections[0].firstStar.x
+function drawConnections(){
+	var multiplierX = mapCanvas.width/48;
+	var multiplierY = mapCanvas.height/27;
+	for(i=0; i< allConnections.length; i++)
+	{
+		mapContext.beginPath();
+		mapContext.moveTo	(	multiplierX*allConnections[i].firstStar.x,
+								multiplierY*allConnections[i].firstStar.y)
+		mapContext.lineTo(		multiplierX*allConnections[i].secondStar.x,
+								multiplierY*allConnections[i].secondStar.y)
+		mapContext.strokeStyle = "darkgray";
+		mapContext.lineWidth = 1.5 * (mapCanvas.width / 1920);
+		mapContext.stroke();
+	}
+	
+}
+
+
+connections();
 courierservice();
-//initGalaxy();
 initSpaceRaster();
 initStars();
 
+//anders laden de Sterren niet >.>
+
+setTimeout(() => { drawConnections(); }, 50);
+setTimeout(() => { drawAllStars(); }, 50);
+
+window.addEventListener("resize", drawConnections);
 window.addEventListener("resize", initStars);
 window.addEventListener("resize", initSpaceRaster);
-window.addEventListener("resize", smort);
+window.addEventListener("resize", drawAllStars);
+
 
