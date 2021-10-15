@@ -61,6 +61,8 @@ public class SpaceCourierEndpoint
 			starService.save(s);
 		}
 	}
+	
+	//TODO Uit database map halen
 	@CrossOrigin(origins = "*", allowedHeaders ="*")
 	@GetMapping("courierservice")
 	public ArrayList<Star> courierservice()
@@ -68,4 +70,33 @@ public class SpaceCourierEndpoint
 		return InitializeData.galaxyMap.getAllStars();
 	}
 	
+	
+	@CrossOrigin(origins = "*", allowedHeaders ="*")
+	@GetMapping("connections")
+	public ArrayList<Connection> connections()
+	{
+		return InitializeData.galaxyMap.getConnectionList();
+	}
+
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
