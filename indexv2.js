@@ -34,8 +34,9 @@ function newMap(){
 	
 	initStars();
 	
-	setTimeout(() => { drawAllStars(); }, 50);
 	setTimeout(() => { drawConnections(); }, 50);
+	setTimeout(() => { drawAllStars(); }, 50);
+	
 }
 
 function initialize() 
