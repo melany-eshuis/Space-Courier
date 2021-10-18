@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
 @Entity
 public class Star 
@@ -11,16 +12,21 @@ public class Star
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public long id;
-	
 	private String name;
-	private int estimation; // Used to calculate the path. 
-	private boolean visited; // Used to calculate the path.
 	private int x;
 	private int y;
 	private int r;
 	private String hex;
 	
-	public Star(int x, int y, int r, String hex, String name) {
+	@Transient
+	private int estimation; // Used to calculate the path. 
+	@Transient
+	private boolean visited; // Used to calculate the path.
+	@Transient
+	private Star previousStar;
+	
+	public Star(int x, int y, int r, String hex, String name) 
+	{
 		this.x = x;
 		this.y = y;
 		this.r = r;
@@ -28,6 +34,10 @@ public class Star
 		this.name = name;
 	}
 	
+	public Star(String name) 
+	{
+		this.name = name;
+	}
 	
 	public int getX() 
 	{
@@ -68,11 +78,6 @@ public class Star
 	{
 		this.hex = hex;
 	}
-	
-	public Star(String name) 
-	{
-		this.name = name;
-	}
 
 	public String getName() 
 	{
@@ -86,6 +91,7 @@ public class Star
 	
 	public void setEstimation(int estimation) 
 	{
+		System.out.println("Estimation of " + name + " changed from " + this.estimation + " to " + estimation);
 		this.estimation = estimation;
 	}
 	
@@ -102,6 +108,16 @@ public class Star
 	public boolean getVisited() 
 	{
 		return visited;
+	}
+	
+	public Star getPreviousStar() 
+	{
+		return previousStar;
+	}
+
+	public void setPreviousStar(Star previousStar) 
+	{
+		this.previousStar = previousStar;
 	}
 }
 

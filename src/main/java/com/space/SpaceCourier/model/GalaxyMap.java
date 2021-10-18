@@ -8,6 +8,7 @@ public class GalaxyMap
 	private ArrayList<Star> starList = new ArrayList<>();
 	private ArrayList<Connection> connectionList = new ArrayList<>();
 	Connection destinationConnection = null;
+	private ArrayList<Star> path = new ArrayList<>();
 	private int radius = 5;
 	
 	/* Adds a star to starList, all stars will be added this way. */
@@ -26,6 +27,13 @@ public class GalaxyMap
 			{
 				return s;
 			}
+		}
+		System.out.println("Star " + starName + " doesn't exist.");
+		System.out.println("Existsing stars are: ");
+		
+		for(Star s : starList) 
+		{
+			System.out.println(s.getName());
 		}
 		
 		return null;
@@ -77,8 +85,8 @@ public class GalaxyMap
 			Connection connection = getConnection(firstStar, secondStar);
 			if(connection != null) 
 			{
-				System.out.println("Connection already exists, changing weight from " + connection.getWeight() + " to " + weight);
-				connection.setWeight(weight);
+				System.out.println("Connection already exists, changing weight from " + connection.getDistance() + " to " + weight);
+				connection.setDistance(weight);
 			}
 			else 
 			{
@@ -91,64 +99,143 @@ public class GalaxyMap
 	/* Using findPath, returns a connection with the full path between the first and second star.*/
 	public Connection getShortestPath(String firstStarName, String secondStarName) 
 	{
+		System.out.println("--- getShortestPath Start ---");
+		
 		resetStarPathData();
 		Star startStar = getStar(firstStarName);
 		Star destinationStar = getStar(secondStarName);
+		
 		if(getConnection(startStar, destinationStar) == null) 
 		{
 			destinationConnection = new Connection(startStar, destinationStar, 0, false);
+			System.out.println("It's not connected yet.");
 		}
 		else 
 		{
 			destinationConnection = getConnection(startStar, destinationStar);
+			System.out.println("It's connected.");
 		}
 		
 		startStar.setEstimation(0);
 		startStar.setVisited(true);
 		
 		findPath(destinationConnection, startStar);
+		
+		System.out.println("--- setPath start ---");
+		setPath(destinationConnection, destinationStar);
+		System.out.println("--- setPath end ---");
+		
+		path.add(0, startStar);
+		
+		for(Star p: path) 
+		{
+			destinationConnection.addStarToPath(p);
+		}
+		
+		System.out.println("--- getShortestPath end ---");
 		return destinationConnection;
 	}
 	
-	/* The loop that finds the full path*/
-	private void findPath(Connection destinationConnection, Star currentStar) 
+	private void setPath(Connection connection, Star Star) 
 	{
-		int shortestWeight = Integer.MAX_VALUE;
+		Star startStar = connection.getFirstStar();
+		Star currentStar = Star;
+		path.add(0, currentStar);
+		
+		System.out.println("Current Star: " + currentStar.getName());
+		if(!currentStar.getPreviousStar().equals(startStar)) 
+		{
+			setPath(connection, currentStar.getPreviousStar());
+		}
+	}
+	
+	/* The loop that finds the full path*/
+	private void findPath(Connection connection, Star currentStar) 
+	{
+		System.out.println("");
+		System.out.println("---- Find Path Start --- ");
+		int shortest = Integer.MAX_VALUE;
 		Star shortestStar = null;
 		
-		for(Connection c : getConnections(currentStar)) 
+		System.out.println("getConnections: " + getConnections(currentStar).size());
+		for (Connection c : getConnections(currentStar)) 
 		{
-			if(!c.getSecondStar().getVisited()) 
+			String firstStarName = "";
+			String secondStarName = "";
+			if(currentStar.getName().equals(c.getFirstStar().getName())) 
 			{
-				if(c.getWeight() < shortestWeight) 
-				{
-					shortestWeight = c.getWeight();
-					shortestStar = c.getSecondStar();
-				}
+				firstStarName = c.getFirstStar().getName();
+				secondStarName = c.getSecondStar().getName();
+			}
+			else if(currentStar.getName().equals(c.getSecondStar().getName())) 
+			{
+				firstStarName = c.getSecondStar().getName();
+				secondStarName = c.getFirstStar().getName();
+			}
+			
+			System.out.println(firstStarName + " is connected with " + secondStarName);
+			int totalEstimation = getStar(firstStarName).getEstimation() + c.getDistance();
+	
+			
+			
+			if(c.getDistance() < shortest && !getStar(secondStarName).getVisited()) 
+			{
+				System.out.println(secondStarName + " is the new shortest distance.");
+				shortest = c.getDistance();
+				shortestStar = getStar(secondStarName);
+			}
+			
+			System.out.println("Total estimation is " + totalEstimation + " second star estimation is " + getStar(secondStarName).getEstimation());
+			System.out.println("From the list estimation is: " + getStar(secondStarName).getEstimation());
+			
+			if(totalEstimation < getStar(secondStarName).getEstimation()) 
+			{
+				getStar(secondStarName).setEstimation(totalEstimation);
+				getStar(secondStarName).setPreviousStar(currentStar);
+				System.out.println("!!The previous star of " + secondStarName + " is " + currentStar.getName());
 			}
 		}
 		
+		
+		boolean go = false;
+		for(Star s : starList) 
+		{
+			if(!s.getVisited()) 
+			{
+				go = true;
+			}
+		}
+		
+		System.out.println("Go is " + go);
+		
 		if(shortestStar != null) 
 		{
-			shortestStar.setEstimation(currentStar.getEstimation() + shortestWeight);
 			shortestStar.setVisited(true);
-			destinationConnection.addStarToPath(shortestStar);
-			
-			if(!destinationConnection.getSecondStar().equals(shortestStar)) 
+			System.out.println(shortestStar.getName() + " is visited.");
+			findPath(connection, shortestStar);
+		}
+		else
+		{
+			if(go && currentStar.getPreviousStar() != null) 
 			{
-				findPath(destinationConnection, shortestStar);
+				System.out.println("We're in go, previsous star is: " + currentStar.getPreviousStar().getName());
+				findPath(connection, currentStar.getPreviousStar());
 			}
-		} 
+			
+		}
+		System.out.println("--- Find Path End ---");
 	}
 	
 	/* Just a simple reset function */
 	private void resetStarPathData() 
 	{
+		path.clear();
 		for(Star s : starList) 
 		{
 			s.setEstimation(Integer.MAX_VALUE);
 			s.setVisited(false);
-		}
+			s.setPreviousStar(null);
+		}		
 	}
 	
 	/* Get a specific Connection. */
@@ -167,16 +254,20 @@ public class GalaxyMap
 	/* returns all  existing connections to this planet */
 	public ArrayList<Connection> getConnections(Star star)
 	{
+		System.out.println("--- getConnections start ---");
 		ArrayList<Connection> currentConnectionList = new ArrayList<>();
+		
+		System.out.println("Checking star: " + star.getName());
 		
 		for(Connection c : connectionList) 
 		{
-			if(c.getFirstStar().equals(star)) 
+			if(c.getFirstStar().getName().equals(star.getName()) || c.getSecondStar().getName().equals(star.getName())) 
 			{
 				currentConnectionList.add(c);
 			}
 		}
 		
+		System.out.println("--- getConnections end ---");
 		return currentConnectionList;
 	}
 
@@ -185,58 +276,48 @@ public class GalaxyMap
 		int A = starA.getX() - starB.getX();
 		int B = starA.getY() - starB.getY();
 		int C = (int)Math.sqrt(A*A + B*B); 
-		
-//		System.out.println("A is: " +A);
-//		System.out.println("B is: " +B);
-//		System.out.println("C is: " +C);
-//		System.out.println(starA.getX());
-//		System.out.println(starA.getY());
-//		System.out.println(starB.getX());
-//		System.out.println(starB.getY());
 		return C;
 	}
 
 	
-	public ArrayList<Connection> getConnectionList() {
+	public ArrayList<Connection> getConnectionList() 
+	{
 		return connectionList;
 	}
 		
-	public void getRoute(){
+	public void getRoute()
+	{
 		ArrayList<Star> listOfStars = new ArrayList<>();
 		boolean notDone = true;
-
 		
-		for(Star s : starList) {
-			
+		for(Star s : starList) 
+		{
 			listOfStars.add(new Star(s.getX(),s.getY(),s.getR(), s.getHex(), s.getName())); 
 		}
 		
 		Star star0 = listOfStars.get(0);
-		while(notDone) {
-		
-		
-			for(Star x : listOfStars) {
-				if ( getDistance(star0, x) <= radius) {
+		while(notDone) 
+		{
+			listOfStars.remove(0);
+			for(Star x : listOfStars) 
+			{
+				if ( getDistance(star0, x) <= radius) 
+				{
 					connectionList.add(new Connection(star0, x, getDistance(star0, x)));
 					
-					//System.out.println("BINNEN DE 5 DISTANCE");
-					//System.out.println(x.getX() + " " + x.getY());
 				}
 			}
-			listOfStars.remove(0);
+			
 			if(listOfStars.isEmpty()) {
 				notDone = false;
 			} else {
 				star0 = listOfStars.get(0);
 			}
-			
-			
 		}
-		
-		
-		
 	}
-	public void initialize() {
+	
+	public void initialize() 
+	{
 		getAllStars().clear();
 		getConnectionList().clear();
 
@@ -246,7 +327,6 @@ public class GalaxyMap
 			randomStar();
 		}
 		
-		System.out.println("TESTING ARRAYLIST");
 		System.out.println(getAllStars().size());	
 		
 		getRoute();
@@ -273,7 +353,7 @@ public class GalaxyMap
 		hex += Integer.toHexString(color5);
 		hex += Integer.toHexString(color6);
 
-		Integer temp = random.nextInt(900);
+		Integer temp = random.nextInt(101);
 		String name = temp.toString();
 		
 		checkStarOccurence(x, y, r, hex, name);
@@ -291,6 +371,11 @@ public class GalaxyMap
 				exists = true;
 				System.out.println("SAAAY WUUUUUUUUUT");
 			} 
+			
+			if(s.getName().equals(name)) 
+			{
+				exists = true;
+			}
 		}
 		if(exists)
 		{
@@ -302,51 +387,3 @@ public class GalaxyMap
 		}
 	}
 }
-
-
-/* --Methode om pythagoras te berekenen (afstand tussen twee sterren)
- * --findRadius variabelen om andere sterren te vinden
- * nieuwe methode maken waar we alle afstanden berekenen binnen de findRadius
- * 		-copy vd sterrenlijst
- * 		-pakken eerste ster
- * 		-maken forloop die door alle andere sterren gaat
- * 		-berekenen de afstand tussen elke ster, als id findRadius zit, maak connection.
- * 		-Huidige ster uit de lijst te halen en process herhalen.
- * 
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

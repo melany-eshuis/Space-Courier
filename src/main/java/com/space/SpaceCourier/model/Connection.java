@@ -6,28 +6,26 @@ public class Connection
 {
 	private Star firstStar;
 	private Star secondStar;
-	private int weight;
+	private int distance;
 	private ArrayList<Star> path = new ArrayList<>(); // (If calculated) The path needed to travel from the first to the second star.
 	private boolean directConnection; // A.K.A., can you go there directly or not.
 	
 	/* Makes a normal (direct) Connection. Also adds the first star to the path. */
-	public Connection(Star firstStar, Star secondStar, int weight) 
+	public Connection(Star firstStar, Star secondStar, int distance) 
 	{
 		this.firstStar = firstStar;
 		this.secondStar = secondStar;
-		this.weight = weight;
+		this.distance = distance;
 		directConnection  = true;
-		path.add(firstStar);
 	}
 	
 	/* Makes a connection that isn't direct, used to find a path. Also adds the first star to the path. */
-	public Connection(Star firstStar, Star secondStar, int weight, boolean directConnection) 
+	public Connection(Star firstStar, Star secondStar, int distance, boolean directConnection) 
 	{
 		this.firstStar = firstStar;
 		this.secondStar = secondStar;
-		this.weight = weight;
+		this.distance = distance;
 		this.directConnection = directConnection;
-		path.add(firstStar);
 	}
 	
 	public Star getFirstStar() 
@@ -50,14 +48,14 @@ public class Connection
 		secondStar = star;
 	}
 	
-	public int getWeight() 
+	public int getDistance() 
 	{
-		return weight;
+		return distance;
 	}
 	
-	public void setWeight(int weight) 
+	public void setDistance(int distance) 
 	{
-		this.weight = weight;
+		this.distance = distance;
 	}
 	
 	public void setDirectConnection(boolean directConnection) 
