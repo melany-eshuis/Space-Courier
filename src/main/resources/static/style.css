@@ -1,0 +1,26 @@
+.container {
+  margin: 0 auto;
+  position: relative;
+}
+
+.container canvas {
+  width: 80%;
+}
+
+#galaxyMap {
+  background: black;
+}
+
+#stars {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  right: 0;
+  bottom: 0;
+  transform: translateX(-50%);
+}
+
+.centercontent {
+  max-width: 100%;
+  text-align: center;
+}
