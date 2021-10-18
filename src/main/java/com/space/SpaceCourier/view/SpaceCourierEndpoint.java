@@ -85,6 +85,12 @@ public class SpaceCourierEndpoint
 		InitializeData.galaxyMap.initialize();
 	}
 	
+	@CrossOrigin(origins = "*", allowedHeaders ="*")
+	@GetMapping("test")
+	public void test()
+	{
+		starService.getStar();
+	}
 }
 
 

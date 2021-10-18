@@ -25,4 +25,10 @@ public class StarService
 	{
 		return starRepository.save(star);
 	}
+	
+	public Star getStar() 
+	{
+		System.out.println("Yes!");
+		return starRepository.findById((long) 1).get();
+	}
 }

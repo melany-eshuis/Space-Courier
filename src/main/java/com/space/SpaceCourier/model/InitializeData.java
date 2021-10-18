@@ -7,9 +7,10 @@ public class InitializeData
 	public InitializeData() 
 	{
 		galaxyMap.initialize();
+		
+		
+		
 	}
-	
-	
 }
 
 
