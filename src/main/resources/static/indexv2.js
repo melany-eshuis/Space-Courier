@@ -2,7 +2,7 @@ function kortsteRoute()
 {
 	const begin = document.getElementById("begin").value;
 	const eind = document.getElementById("eind").value;
-	const adress = "http://localhost:8082/getpath/" + begin + "/" + eind;
+	const adress = "https://spacecourier.azurewebsites.net/getpath/" + begin + "/" + eind;
 
 	const xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() 
@@ -23,7 +23,7 @@ function newMap(){
 	allConnections = [];
 
 	const xhr = new XMLHttpRequest();
-	const adress = "http://localhost:8082/newmap";
+	const adress = "https://spacecourier.azurewebsites.net/newmap";
 
 	xhr.open("GET", adress, true);
 	xhr.send();
@@ -43,7 +43,7 @@ function initialize()
 {
 	const xhr = new XMLHttpRequest();
   
-	xhr.open("GET", "http://localhost:8082/initialize", true);
+	xhr.open("GET", "https://spacecourier.azurewebsites.net/initialize", true);
 	xhr.send();
 }
 
@@ -60,7 +60,7 @@ function courierservice()
 			allStars = JSON.parse(this.responseText);    
 		} 
 	}
-	xhr.open("GET", "http://localhost:8082/courierservice", true);
+	xhr.open("GET", "https://spacecourier.azurewebsites.net/courierservice", true);
 	xhr.send();
 }
 
@@ -76,7 +76,7 @@ function connections()
 			allConnections = JSON.parse(this.responseText);    
 		} 
 	}
-	xhr.open("GET", "http://localhost:8082/connections", true);
+	xhr.open("GET", "https://spacecourier.azurewebsites.net/connections", true);
 	xhr.send();
 }
 
