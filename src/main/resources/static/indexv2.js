@@ -24,18 +24,28 @@ function newMap(){
 
 	const xhr = new XMLHttpRequest();
 	const adress = "https://spacecourier.azurewebsites.net/newmap";
-
+	
+	xhr.onreadystatechange = function() 
+	{
+		console.log("ready state: ", this.readState);
+		console.log("status: ", this.status);
+		if(this.readyState == 4 && this.status == 200) 
+		{
+			connections();
+			courierservice();
+			initSpaceRaster();
+			
+			initStars();
+			
+			setTimeout(() => { drawConnections(); }, 50);
+			setTimeout(() => { drawAllStars(); }, 50);
+		}
+	};
+	
 	xhr.open("GET", adress, true);
 	xhr.send();
 
-	connections();
-	courierservice();
-	initSpaceRaster();
 	
-	initStars();
-	
-	setTimeout(() => { drawConnections(); }, 50);
-	setTimeout(() => { drawAllStars(); }, 50);
 	
 }
 
@@ -57,7 +67,8 @@ function courierservice()
 	{
 		if(this.readyState == 4 && this.status == 200) 
 		{
-			allStars = JSON.parse(this.responseText);    
+			allStars = JSON.parse(this.responseText);
+			connections();
 		} 
 	}
 	xhr.open("GET", "https://spacecourier.azurewebsites.net/courierservice", true);
@@ -74,6 +85,10 @@ function connections()
 		if(this.readyState == 4 && this.status == 200) 
 		{
 			allConnections = JSON.parse(this.responseText);    
+			initSpaceRaster();
+			initStars();
+			setTimeout(() => { drawConnections(); }, 50);
+			setTimeout(() => { drawAllStars(); }, 50);
 		} 
 	}
 	xhr.open("GET", "https://spacecourier.azurewebsites.net/connections", true);
@@ -266,15 +281,13 @@ function drawConnections(){
 }
 
 
-connections();
+
 courierservice();
-initSpaceRaster();
-initStars();
+
 
 //anders laden de Sterren niet >.>
 
-setTimeout(() => { drawConnections(); }, 50);
-setTimeout(() => { drawAllStars(); }, 50);
+
 
 window.addEventListener("resize", drawConnections);
 window.addEventListener("resize", initStars);
