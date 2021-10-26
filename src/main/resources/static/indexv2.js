@@ -45,7 +45,7 @@ function newMap(){
 	xhr.open("GET", adress, true);
 	xhr.send();
 
-	
+	location.reload();
 	
 }
 
@@ -289,9 +289,10 @@ courierservice();
 
 
 
-window.addEventListener("resize", drawConnections);
+
 window.addEventListener("resize", initStars);
 window.addEventListener("resize", initSpaceRaster);
 window.addEventListener("resize", drawAllStars);
+window.addEventListener("resize", drawConnections);
 
 
